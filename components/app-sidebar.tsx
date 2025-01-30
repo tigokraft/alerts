@@ -1,9 +1,10 @@
 "use client";
 
 import { useSidebar } from "@/components/SidebarProvider";
-import { Home, Bell, Video, AlignLeft, Settings } from "lucide-react";
+import { Home, Bell, Video, PanelLeft, Settings } from "lucide-react";
 import { Setting } from "@/components/Setting";
 import { useState } from "react";
+import Link from "next/link";
 
 export const AppSidebar = () => {
   const { isCollapsed, toggleSidebar } = useSidebar();
@@ -49,25 +50,25 @@ export const AppSidebar = () => {
 
         {/* Settings */}
         <button
-          className={`flex items-center px-4 py-3 hover:bg-muted rounded-md ${
+          className={`flex items-center px-4 py-3 ${
             isCollapsed ? "justify-center" : "space-x-3"
-          }`}
+          } hover:bg-sidebar-hover rounded-md`}
           onClick={() => setIsSettingsOpen(true)}
         >
           <Settings className="h-5 w-5 text-muted-foreground" />
           {!isCollapsed && <span className="text-sm">Settings</span>}
         </button>
-
-        {/* Settings Dialog */}
-        <Setting open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
       </div>
+
+      {/* Settings Dialog */}
+      <Setting open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
 
       {/* Minimize Button */}
       <button
         onClick={toggleSidebar}
         className="absolute top-4 left-[calc(100%+8px)] flex items-center justify-center text-muted-foreground hover:text-primary"
       >
-        <AlignLeft className="h-5 w-5" />
+        <PanelLeft className="h-5 w-5" />
       </button>
     </div>
   );
