@@ -10,7 +10,9 @@ export async function POST(req: Request) {
     const formData = await req.formData();
     const file = formData.get("file") as Blob;
 
-    if (!file) return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+    if (!file) {
+      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
+    }
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const filename = file.name;
@@ -28,6 +30,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, video });
   } catch (error) {
+    console.error("Upload Error:", error);
     return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
 }

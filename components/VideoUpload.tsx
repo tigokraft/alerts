@@ -6,10 +6,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 
-export default function VideoUpload({ onUpload }: { onUpload: (video: string) => void }) {
+export default function VideoUpload({ onUpload }: { onUpload: (video: any) => void }) {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -19,7 +20,9 @@ export default function VideoUpload({ onUpload }: { onUpload: (video: string) =>
 
   const handleUpload = async () => {
     if (!file) return;
+
     setUploading(true);
+    setError(null); // Reset error
 
     const formData = new FormData();
     formData.append("file", file);
@@ -30,14 +33,18 @@ export default function VideoUpload({ onUpload }: { onUpload: (video: string) =>
         body: formData,
       });
 
-      if (!res.ok) throw new Error("Upload failed");
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Upload failed");
+      }
 
       const data = await res.json();
-      onUpload(data.path);
+      onUpload(data.video);
       setFile(null);
       setOpen(false);
-    } catch (error) {
-      console.error("Upload error:", error);
+    } catch (error: any) {
+      console.error("Upload Error:", error);
+      setError(error.message);
     } finally {
       setUploading(false);
     }
@@ -54,6 +61,7 @@ export default function VideoUpload({ onUpload }: { onUpload: (video: string) =>
           </DialogHeader>
           <Input type="file" accept="video/*" onChange={handleFileChange} />
           {uploading && <Progress />}
+          {error && <p className="text-red-500">{error}</p>}
           <Button onClick={handleUpload} disabled={!file || uploading}>
             Upload
           </Button>

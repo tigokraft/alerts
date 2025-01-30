@@ -1,5 +1,3 @@
-import { SidebarProvider } from "@/components/SidebarProvider";
-import { AppSidebar } from "@/components/app-sidebar";
 import "@/app/globals.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -11,17 +9,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans">
-        <SidebarProvider>
-          {/* Layout with Sidebar */}
-          <div className="flex">
-            {/* Sidebar */}
-            <AppSidebar />
-            {/* Main Content */}
-            <main className="flex-1 p-4">{children}</main>
-          </div>
-        </SidebarProvider>
-      </body>
+      <body className="font-sans">{children}</body>
     </html>
   );
 }
