@@ -5,6 +5,7 @@ import { Home, Bell, Video, PanelLeft, Settings } from "lucide-react";
 import { Setting } from "@/components/Setting";
 import { useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export const AppSidebar = () => {
   const { isCollapsed, toggleSidebar } = useSidebar();
@@ -21,43 +22,42 @@ export const AppSidebar = () => {
         {/* Navigation */}
         <nav className="flex-1 space-y-2">
           <ul className="space-y-2 mt-4">
-            <li
-              className={`flex items-center px-4 py-3 ${
-                isCollapsed ? "justify-center" : "space-x-3"
-              } rounded-lg hover:bg-sidebar-hover cursor-pointer`}
-            >
-              <Home className="h-5 w-5 text-muted-foreground" />
-              {!isCollapsed && <span className="text-sm">Overview</span>}
+            <li>
+              <Link href="/control/" passHref>
+                <Button variant="ghost" className="w-full flex justify-start space-x-3">
+                  <Home className="h-5 w-5 text-muted-foreground" />
+                  {!isCollapsed && <span className="text-sm">Overview</span>}
+                </Button>
+              </Link>
             </li>
-            <li
-              className={`flex items-center px-4 py-3 ${
-                isCollapsed ? "justify-center" : "space-x-3"
-              } rounded-lg hover:bg-sidebar-hover cursor-pointer`}
-            >
-              <Bell className="h-5 w-5 text-muted-foreground" />
-              {!isCollapsed && <span className="text-sm">Alerts</span>}
+            <li>
+              <Link href="/control/alerts" passHref>
+                <Button variant="ghost" className="w-full flex justify-start space-x-3">
+                  <Bell className="h-5 w-5 text-muted-foreground" />
+                  {!isCollapsed && <span className="text-sm">Alerts</span>}
+                </Button>
+              </Link>
             </li>
-            <li
-              className={`flex items-center px-4 py-3 ${
-                isCollapsed ? "justify-center" : "space-x-3"
-              } rounded-lg hover:bg-sidebar-hover cursor-pointer`}
-            >
-              <Video className="h-5 w-5 text-muted-foreground" />
-              {!isCollapsed && <span className="text-sm">Videos</span>}
+            <li>
+              <Link href="/control/videos" passHref>
+                <Button variant="ghost" className="w-full flex justify-start space-x-3">
+                  <Video className="h-5 w-5 text-muted-foreground" />
+                  {!isCollapsed && <span className="text-sm">Videos</span>}
+                </Button>
+              </Link>
             </li>
           </ul>
         </nav>
 
         {/* Settings */}
-        <button
-          className={`flex items-center px-4 py-3 ${
-            isCollapsed ? "justify-center" : "space-x-3"
-          } hover:bg-sidebar-hover rounded-md`}
+        <Button
+          variant="ghost"
+          className="w-full flex justify-start space-x-3"
           onClick={() => setIsSettingsOpen(true)}
         >
           <Settings className="h-5 w-5 text-muted-foreground" />
           {!isCollapsed && <span className="text-sm">Settings</span>}
-        </button>
+        </Button>
       </div>
 
       {/* Settings Dialog */}

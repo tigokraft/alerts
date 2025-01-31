@@ -1,17 +1,10 @@
-export default function ControlLayout({ children }: { children: React.ReactNode }) {
+export default function ControlPage() {
   return (
-    <div className="flex">
-      <aside className="w-64 bg-gray-900 text-white h-screen p-4">
-        <h2 className="text-xl font-bold mb-6">Control Panel</h2>
-        <nav>
-          <ul>
-            <li className="mb-2"><a href="/control/overview">Overview</a></li>
-            <li className="mb-2"><a href="/control/alerts">Alerts</a></li>
-            <li className="mb-2"><a href="/control/videos">Videos</a></li>
-          </ul>
-        </nav>
-      </aside>
-      <main className="flex-1 p-6">{children}</main>
+    <div className="flex h-screen bg-background text-foreground">
+      <div className="flex-1 p-6">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <p className="text-muted-foreground mt-2">Welcome to the Control Panel</p>
+      </div>
     </div>
   );
 }

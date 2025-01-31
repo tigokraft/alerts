@@ -16,3 +16,14 @@ model Video {
   createdAt DateTime @default(now())
   enabled   Boolean @default(false)
 }
+
+model Alert {
+  id       Int     @id @default(autoincrement())
+  name     String
+  time     String
+  repeat   String
+  days     String?  // Comma-separated days for specific repetition
+  sound    String?
+  active   Boolean @default(true)
+  createdAt DateTime @default(now())
+}
