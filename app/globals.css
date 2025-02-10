@@ -72,8 +72,33 @@ body {
     --sidebar-accent-foreground: hsl(0, 0%, 85%); /* Light gray for contrast */
     --sidebar-border: hsl(0, 0%, 14%); /* Dark gray border */
     --sidebar-ring: hsl(0, 0%, 50%); /* Medium gray for focus elements */
+  }
 
-
+  /* Override the main TimeKeeper container */
+  .react-timekeeper {
+    background-color: hsl(var(--card)) !important;
+    color: hsl(var(--card-foreground)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    border-radius: var(--radius);
+  }
+  
+  /* Style the dial/clock areas */
+  .react-timekeeper .tk__dial,
+  .react-timekeeper .tk__clock {
+    background-color: hsl(var(--input)) !important;
+    color: hsl(var(--foreground)) !important;
+  }
+  
+  /* Style the control buttons (if present) */
+  .react-timekeeper .tk__control-button {
+    background: transparent;
+    color: hsl(var(--foreground)) !important;
+  }
+  
+  /* Style the header */
+  .react-timekeeper .tk__header {
+    background-color: hsl(var(--input)) !important;
+    color: hsl(var(--foreground)) !important;
   }
 
   * {
@@ -82,5 +107,15 @@ body {
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Global hover utility using the sidebar hover color */
+@layer components {
+  .hover-bg {
+    transition: background-color 0.2s ease-in-out;
+  }
+  .hover-bg:hover {
+    background-color: var(--sidebar-hover);
   }
 }

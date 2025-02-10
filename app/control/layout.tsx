@@ -1,26 +1,30 @@
-import { SidebarProvider } from "@/components/SidebarProvider";
-import { AppSidebar } from "@/components/app-sidebar";
+// app/control/layout.tsx
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-    return (
-            <html>
-                <head>
-                <link
-                  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-                  rel="stylesheet"
-                />
-                </head>
-                <body className="font-sans">
-                    <SidebarProvider>
-                      {/* Layout with Sidebar */}
-                      <div className="flex">
-                        {/* Sidebar */}
-                        <AppSidebar />
-                        {/* Main Content */}
-                        <main className="flex-1 p-4">{children}</main>
-                      </div>
-                    </SidebarProvider>
-                </body>
-            </html>
-    );
+import { AppSidebar, } from "@/components/app-sidebar";
+import { Providers } from "../providers"; // adjust path if needed
+import { Toaster } from "@/components/ui/toaster";
+import { SidebarProvider } from "@/components/ui/sidebar";
+
+export const metadata = {
+  charset: "utf-8",
+  title: "control panel",
+  description: "video alerter",
+};
+
+export default function ControlLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <SidebarProvider>
+        <Providers>
+          <div className="flex">
+            {/* Sidebar */}
+            <AppSidebar />
+            {/* Main Content */}
+            <main className="flex-1 p-4">{children}</main>
+            <Toaster />
+          </div>
+        </Providers>
+      </SidebarProvider>
+    </>
+  );
 }

@@ -1,69 +1,93 @@
 "use client";
 
-import { useSidebar } from "@/components/SidebarProvider";
-import { Home, Bell, Video, PanelLeft, Settings } from "lucide-react";
-import { Setting } from "@/components/Setting";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Home, Bell, Video, PanelLeft, UserCog } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
+import { Setting } from "@/components/Setting";
+import { NavUser } from "@/components/user-side"; // Adjust the path as necessary
 
 export const AppSidebar = () => {
-  const { isCollapsed, toggleSidebar } = useSidebar();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  // Local state for managing sidebar open vs collapsed
+  const [isOpen, setIsOpen] = useState(true);
+  const toggleSidebar = () => {
+    setIsOpen((prev) => !prev);
+    console.log("Sidebar is now", !isOpen ? "Open" : "Collapsed");
+  };
+
+  // Retrieve session data (if available)
+  const { data: session } = useSession();
 
   return (
     <div className="relative h-screen flex">
-      {/* Sidebar */}
+      {/* Sidebar container with inline width control */}
       <div
-        className={`h-full ${
-          isCollapsed ? "w-16" : "w-64"
-        } transition-all duration-300 bg-sidebar text-foreground flex flex-col`}
+        style={{ width: isOpen ? "16rem" : "4rem" }} // 16rem ~ w-64, 4rem ~ w-16
+        className="h-full transition-all duration-300 bg-sidebar text-foreground flex flex-col"
       >
-        {/* Navigation */}
+        {/* Navigation items */}
         <nav className="flex-1 space-y-2">
           <ul className="space-y-2 mt-4">
             <li>
               <Link href="/control/" passHref>
-                <Button variant="ghost" className="w-full flex justify-start space-x-3">
+                <Button
+                  variant="ghost"
+                  className="w-full flex justify-start items-center space-x-3 hover-bg"
+                >
                   <Home className="h-5 w-5 text-muted-foreground" />
-                  {!isCollapsed && <span className="text-sm">Overview</span>}
+                  {isOpen && <span className="text-sm">Overview</span>}
                 </Button>
               </Link>
             </li>
             <li>
               <Link href="/control/alerts" passHref>
-                <Button variant="ghost" className="w-full flex justify-start space-x-3">
+                <Button
+                  variant="ghost"
+                  className="w-full flex justify-start items-center space-x-3 hover-bg"
+                >
                   <Bell className="h-5 w-5 text-muted-foreground" />
-                  {!isCollapsed && <span className="text-sm">Alerts</span>}
+                  {isOpen && <span className="text-sm">Alerts</span>}
                 </Button>
               </Link>
             </li>
             <li>
               <Link href="/control/videos" passHref>
-                <Button variant="ghost" className="w-full flex justify-start space-x-3">
+                <Button
+                  variant="ghost"
+                  className="w-full flex justify-start items-center space-x-3 hover-bg"
+                >
                   <Video className="h-5 w-5 text-muted-foreground" />
-                  {!isCollapsed && <span className="text-sm">Videos</span>}
+                  {isOpen && <span className="text-sm">Videos</span>}
                 </Button>
               </Link>
             </li>
+            {/* Render the Admin option only for ADMIN role */}
+            {session?.user?.role === "ADMIN" && (
+              <li>
+                <Link href="/control/admin" passHref>
+                  <Button
+                    variant="ghost"
+                    className="w-full flex justify-start items-center space-x-3 hover-bg"
+                  >
+                    <UserCog className="h-5 w-5 text-muted-foreground" />
+                    {isOpen && <span className="text-sm">Admin</span>}
+                  </Button>
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
 
-        {/* Settings */}
-        <Button
-          variant="ghost"
-          className="w-full flex justify-start space-x-3"
-          onClick={() => setIsSettingsOpen(true)}
-        >
-          <Settings className="h-5 w-5 text-muted-foreground" />
-          {!isCollapsed && <span className="text-sm">Settings</span>}
-        </Button>
+        {/* Conditionally render NavUser only when session.user is available */}
+        {isOpen && session?.user && (
+          <div className="mt-auto p-4">
+            <NavUser user={session.user} />
+          </div>
+        )}
       </div>
 
-      {/* Settings Dialog */}
-      <Setting open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
-
-      {/* Minimize Button */}
+      {/* Toggle sidebar button */}
       <button
         onClick={toggleSidebar}
         className="absolute top-4 left-[calc(100%+8px)] flex items-center justify-center text-muted-foreground hover:text-primary"

@@ -1,72 +1,67 @@
 "use client";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import ReactDOM from "react-dom";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
 
-export const Setting = ({ open, onOpenChange }: { open: boolean; onOpenChange: (value: boolean) => void }) => {
-  const [theme, setTheme] = useState("system"); // Default theme: "system"
+interface SettingProps {
+  open: boolean;
+  onOpenChange: (value: boolean) => void;
+}
 
-  // Apply the theme on initial load
+export const Setting = ({ open, onOpenChange }: SettingProps) => {
+  const { theme, setTheme } = useTheme();
+  const [selectedTheme, setSelectedTheme] = useState("system");
+
   useEffect(() => {
-    const storedTheme = localStorage.getItem("theme") || "system";
-    setTheme(storedTheme);
-    applyTheme(storedTheme);
-  }, []);
+    // On mount (or when the theme changes), sync the local state with the active theme.
+    setSelectedTheme(theme || "system");
+  }, [theme]);
 
-  // Function to apply the theme
-  const applyTheme = (newTheme: string) => {
-    document.documentElement.classList.remove("light", "dark");
-    if (newTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else if (newTheme === "light") {
-      document.documentElement.classList.add("light");
-    }
-    localStorage.setItem("theme", newTheme); // Persist theme
+  const handleThemeChange = (newTheme: string) => {
+    setTheme(newTheme);
+    setSelectedTheme(newTheme);
   };
 
-  // Handle theme change
-  const handleThemeChange = (value: string) => {
-    setTheme(value);
-    applyTheme(value);
-  };
+  // If the dialog is closed, render nothing.
+  if (!open) return null;
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-background border border-border shadow-lg rounded-lg">
-        <DialogHeader>
-          <DialogTitle>Theme Settings</DialogTitle>
-          <DialogDescription>
-            Choose your preferred theme for the application.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="flex justify-between mt-4">
+  return ReactDOM.createPortal(
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={() => onOpenChange(false)}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="p-6 rounded shadow-lg max-w-md w-full bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))]"
+      >
+        <h2 className="text-lg font-bold mb-4">Theme Settings</h2>
+        <p className="mb-4 text-sm">
+          Current theme: <strong>{selectedTheme}</strong>
+        </p>
+        <div className="flex justify-between mb-4">
           <Button
-            variant={theme === "light" ? "default" : "outline"}
+            variant={selectedTheme === "light" ? "default" : "outline"}
             onClick={() => handleThemeChange("light")}
           >
             Light
           </Button>
           <Button
-            variant={theme === "dark" ? "default" : "outline"}
+            variant={selectedTheme === "dark" ? "default" : "outline"}
             onClick={() => handleThemeChange("dark")}
           >
             Dark
           </Button>
           <Button
-            variant={theme === "system" ? "default" : "outline"}
+            variant={selectedTheme === "system" ? "default" : "outline"}
             onClick={() => handleThemeChange("system")}
           >
             System
           </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>,
+    document.body
   );
 };

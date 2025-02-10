@@ -1,15 +1,26 @@
+import { ThemeProvider } from "next-themes";
+import { Providers } from "./providers"
 import "@/app/globals.css";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export const metadata = {
+  title: "My App",
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className="font-sans">{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className="font-sans">
+        {/* next-themes handles applying "dark" / "light" classes to <body> or <html> */}
+        <Providers>
+          <ThemeProvider attribute="class" defaultTheme="system">
+            {children}
+          </ThemeProvider>
+        </Providers>
+      </body>
     </html>
-  );
+  )
 }
